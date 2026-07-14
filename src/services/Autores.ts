@@ -8,22 +8,38 @@ import { criarAutor,
         existeAutor
 } from "../repositories/Autores";
 
-export async function cadastrarAutor(nome:string, nacionalidade:string, data_nascimento:Date): Promise<Autores | null> {
-    //VALIDAR SE O AUTOR JÁ EXISTE
+export async function cadastrarAutor(nome:string, nacionalidade:string, data_nascimento:Date): Promise<Autores | string> {
     const existe_autor = await existeAutor(nome, nacionalidade, data_nascimento)
-    if(!existe_autor) return null
+    if(existe_autor) return "Uma função que diz que esse autor já está cadastrado"
     try {
-        const id = criarAutor(nome, nacionalidade, data_nascimento) //AQUI PODE EXPLODIR AQUELE ERRO DO BLOCO TRY/CATCH
-        if(typeof id === null) return null //RETORNAR ALGUMA MENSAGEM AQUI?
-        const sql2 = `SELECT * FROM tb_autores WHERE id=$1`
-        try {
-            const result2 = await pool.query<Autores>(sql2, [id])
-            return result2.rows[0] ?? null //CASO AQUI RETORNE NULL VERIFICAR COMO DIFERENCIAR DO ANTERIOR
-        } catch(err) {
-            throw err
+        const id = await criarAutor(nome, nacionalidade, data_nascimento) //AQUI PODE EXPLODIR AQUELE ERRO DO BLOCO TRY/CATCH
+        if(!id) {
+            return "Uma função que diz que não foi possível cadastrar o autor"
+        } else {
+            const autor_cadastrado =  {id: id, nome: nome, nacionalidade: nacionalidade, data_nascimento: data_nascimento}
+            return autor_cadastrado
         }
-        
     } catch(err) {
-        throw err //JOGO ESSE ERRO PRA FRENTE? OU TRATO AQUI
+        return "AQUI TEREMOS A FUNÇAO DE TRADUZIR O ERRO E RETORNA-LO NA TELA COM TIPO STRING"
     }
+}
+
+export async function editarAutor(id:number, nome?:string, nacionalidade?:string, data_nascimento?:Date): Promise<Autores | string> {
+    const existe_autor_id = await buscarAutorPorId(id)
+    if(!existe_autor_id) return "ERRO: O ID NÃO CORRESPONDE A UM AUTOR"
+    try {
+        const nomeFinal = nome || existe_autor_id.nome
+        const nacionalFinal = nacionalidade || existe_autor_id.nacionalidade
+        const data_nascFinal = data_nascimento || existe_autor_id.data_nascimento
+        const editar_autor = await atualizarAutor(id, nomeFinal, nacionalFinal, data_nascFinal)
+        if(!editar_autor) return "ERRO: O BANCO DE DADOS FALHOU EM RETORNAR OS DADOS DO AUTOR"
+        const autor_editado = {id: id, nome:nomeFinal, nacionalidade:nacionalFinal, data_nascimento:data_nascFinal}
+        return autor_editado
+    } catch(err) {
+        return "ERRO: HOUVE UM ERRO DURANTE A EXECUÇÃO DA EDIÇÃO"
+    }
+}
+
+export async function encontrarAutor(nome:string): Promise<Autores[] | []> {
+    
 }
