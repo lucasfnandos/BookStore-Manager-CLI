@@ -26,11 +26,11 @@ export async function buscarAutorPorId(id:number):Promise<Autores | null> {
     }
 }
 
-export async function buscarAutorPorNome(nome:string):Promise<Autores[] | []> {
-    const sql = `SELECT id FROM tb_autores WHERE ILIKE '%$1%'`
+export async function buscarAutorPorNome(nome:string):Promise<Autores[]> {
+    const sql = `SELECT * FROM tb_autores WHERE nome ILIKE $1`
     try {
-        const result = await pool.query(sql, [nome])
-        return result.rows[0] ?? []
+        const result = await pool.query<Autores>(sql, [`%${nome}%`])
+        return result.rows
     } catch(err) {
         throw err
     }
