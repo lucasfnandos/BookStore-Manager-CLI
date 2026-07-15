@@ -52,3 +52,16 @@ export function limparData(dataStr?: string): string {
 
     return dataLimpa;
 }
+export function limparId(idInput?: string): number {
+    if (!idInput) return NaN;
+    
+    const limpo = idInput.trim();
+    const numero = Number(limpo);
+    
+    // Garante que é um número válido, inteiro e maior que zero (IDs de BD normalmente começam em 1)
+    if (isNaN(numero) || !Number.isInteger(numero) || numero <= 0) {
+        return NaN;
+    }
+    
+    return numero;
+}
