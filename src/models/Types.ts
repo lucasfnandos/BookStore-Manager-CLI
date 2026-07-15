@@ -3,3 +3,5 @@ export type ControllerResponse = {
     mensagem: string;
     dados?: any;
 }
+
+export type EntidadeDoSistema = 'Autor' | 'Cliente' | 'Livro' | 'Exemplar' | 'Empréstimo';
