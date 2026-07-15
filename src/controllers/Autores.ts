@@ -4,8 +4,9 @@ import {
     serviceBuscarAutorPorNome,
     serviceDeletarAutor
 } from "../services/Autores"
+import { ControllerResponse } from "../models/Types"
 
-export async function controllerCriarAutor(nome:string, nacionalidade:string, data_nascimento:Date):Promise<object> {
+export async function controllerCriarAutor(nome:string, nacionalidade:string, data_nascimento:Date):Promise<ControllerResponse> {
     try {
         //SANITIZAR OS DADOS PRIMEIRA LETRA DA PALAVRA MAIUSCULA DEMAIS MINUSCULA SEM ESPAÇOS EM BRANCO NO FINAL E INICIO .TRIM()
         //APOS SANITIZAR SEGUE:
