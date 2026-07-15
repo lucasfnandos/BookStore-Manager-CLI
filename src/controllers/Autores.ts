@@ -5,6 +5,12 @@ import {
     serviceDeletarAutor
 } from "../services/Autores"
 import { ControllerResponse } from "../models/Types"
+import {
+    limparTexto,
+    limparData,
+    capitalizarNome
+} from "../utils/sanitizers"
+import { traduzirErro } from "../utils/errorMessages"
 
 export async function controllerCriarAutor(nome:string, nacionalidade:string, data_nascimento:string):Promise<ControllerResponse> {
     try {
