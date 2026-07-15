@@ -1,7 +1,7 @@
 import { pool } from '../database/db'
 import { Autores  } from '../models/Autores'
 
-export async function criarAutor(nome:string, nacionalidade:string, data_nascimento:Date): Promise<number | null>{
+export async function repositoryCriarAutor(nome:string, nacionalidade:string, data_nascimento:Date): Promise<number | null>{
     const sql = `INSERT INTO tb_autores (nome, nacionalidade, data_nascimento) VALUES ($1,$2,$3) RETURNING id`
     try {
         const result = await pool.query<Autores>(sql, [nome, nacionalidade, data_nascimento])
@@ -14,7 +14,7 @@ export async function criarAutor(nome:string, nacionalidade:string, data_nascime
     }
 }
 
-export async function buscarAutorPorId(id:number):Promise<Autores | null> {
+export async function repositoryBuscarAutorPorId(id:number):Promise<Autores | null> {
     const sql = `SELECT * FROM tb_autores WHERE id=$1`
     try {
         const result = await pool.query<Autores>(sql, [id])
@@ -26,7 +26,7 @@ export async function buscarAutorPorId(id:number):Promise<Autores | null> {
     }
 }
 
-export async function buscarAutorPorNome(nome:string):Promise<Autores[]> {
+export async function repositoryBuscarAutorPorNome(nome:string):Promise<Autores[]> {
     const sql = `SELECT * FROM tb_autores WHERE nome ILIKE $1`
     try {
         const result = await pool.query<Autores>(sql, [`%${nome}%`])
@@ -36,7 +36,7 @@ export async function buscarAutorPorNome(nome:string):Promise<Autores[]> {
     }
 }
 
-export async function atualizarAutor(id:number, nome:string, nacionalidade:string, data_nascimento:Date): Promise<number | null> {
+export async function repositoryAtualizarAutor(id:number, nome:string, nacionalidade:string, data_nascimento:Date): Promise<number | null> {
     const sql = `UPDATE tb_autores SET nome=$1, nacionalidade=$2, data_nascimento=$3 WHERE id=$4 RETURNING id`
     try {
         const result = await pool.query<Autores>(sql, [nome, nacionalidade, data_nascimento, id])
@@ -47,7 +47,7 @@ export async function atualizarAutor(id:number, nome:string, nacionalidade:strin
     }
 }
 
-export async function deletarAutor(id:number): Promise<boolean>{
+export async function repositoryDeletarAutor(id:number): Promise<boolean>{
     const sql = `DELETE FROM tb_autores WHERE id = $1`;
     try {
         const result = await pool.query<Autores>(sql, [id])
@@ -58,7 +58,7 @@ export async function deletarAutor(id:number): Promise<boolean>{
     
 }
 
-export async function existeAutor(nome:string, nacionalidade:string, data_nascimento:Date):Promise<boolean> {
+export async function repositoryExisteAutor(nome:string, nacionalidade:string, data_nascimento:Date):Promise<boolean> {
     const sql = `SELECT * FROM tb_autores WHERE nome=$1, nacionalidade=$2, data_nascimento=$3`
     try {
         const result = await pool.query<Autores>(sql, [nome, nacionalidade, data_nascimento])
