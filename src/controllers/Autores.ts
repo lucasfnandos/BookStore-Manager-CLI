@@ -76,3 +76,27 @@ export async function controllerAtualizarAutor(id:string, nome?:string, nacional
     }
 }
 
+export async function controllerBuscarAutorPorNome(nome:string): Promise<ControllerResponse> {
+    try {
+        const nomeLimp = limparTexto(nome)
+        if(!nomeLimp) return { sucesso: false, mensagem: "Erro: o Nome informado é inválido." }
+        const buscarAutor = await serviceBuscarAutorPorNome(nomeLimp)
+        if(buscarAutor.length === 0) return { sucesso: false, mensagem: "Nenhum Autor foi encontrado com esse nome." }
+        return { sucesso: true, mensagem: "Autores encontrados com esse nome...", dados: buscarAutor }
+    } catch(err) {
+        return { sucesso: false, mensagem: traduzirErro(err, 'Autor')}
+    }
+}
+
+export async function controllerDeletarAutor(id:string): Promise<ControllerResponse> {
+    try {
+        const idValido = limparId(id)
+        if(isNaN(idValido)) return { sucesso: false, mensagem: "Erro: o ID informado é inválido." }
+        const deletarAutor = await serviceDeletarAutor(idValido)
+        if(!deletarAutor) return { sucesso: false, mensagem: "Erro: não foi possível deletar o Autor." }
+        return { sucesso: true, mensagem: "Sucesso: as informações do autor foram removidas." }
+
+    } catch(err) {
+        return { sucesso: false, mensagem: traduzirErro(err, 'Autor')}
+    }
+}
