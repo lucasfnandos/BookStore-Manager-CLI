@@ -1,10 +1,13 @@
+import { format } from "path";
 import {
     controllerCriarAutor,
     controllerAtualizarAutor,
     controllerBuscarAutorPorNome,
     controllerDeletarAutor
 } from "../controllers/Autores"
+import { formatarDataPtBR } from "../utils/formatters"
 import * as readline from 'readline/promises'
+
 
 export async function iniciarMenuAutores(terminal: readline.Interface): Promise<void> {
     let rodando = true;
@@ -37,7 +40,7 @@ export async function iniciarMenuAutores(terminal: readline.Interface): Promise<
                     console.log(`\n ${respostaCriar.mensagem}`)
                     console.log("-------------------------------------------------------------------------")
                     console.log("ID | Nome | Nacionalidade | Data de Nascimento | Idade");
-                    console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${dataAutor} | ${idadeAutor} anos`)
+                    console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${formatarDataPtBR(autor.data_nascimento)} | ${idadeAutor} anos`)
                     console.log("-------------------------------------------------------------------------")
                 }
                 break
@@ -56,7 +59,7 @@ export async function iniciarMenuAutores(terminal: readline.Interface): Promise<
                     const listaDeAutores = listarAutores.dados
                     
                     for(let autor of listaDeAutores) {
-                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${autor.data_nascimento}`)
+                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${formatarDataPtBR(autor.data_nascimento)}`)
                     }
                     console.log("-------------------------------------------------------------------------")
                     
@@ -72,7 +75,7 @@ export async function iniciarMenuAutores(terminal: readline.Interface): Promise<
                         console.log(`\n ${respostaEditar.mensagem}`)
                         const autor = respostaEditar.dados
                         console.log("ID | Nome | Nacionalidade | Data de Nascimento");
-                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${autor.data_nascimento}`)
+                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${formatarDataPtBR(autor.data_nascimento)}`)
                     }
                 }
                 break
@@ -90,7 +93,7 @@ export async function iniciarMenuAutores(terminal: readline.Interface): Promise<
                     const listaDeAutores = listarAutores.dados
                     
                     for(let autor of listaDeAutores) {
-                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${autor.data_nascimento}`)
+                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${formatarDataPtBR(autor.data_nascimento)}`)
                     }
                     console.log("-------------------------------------------------------------------------")
                     
@@ -113,7 +116,7 @@ export async function iniciarMenuAutores(terminal: readline.Interface): Promise<
                     const listaDeAutores = listarAutores.dados
                     
                     for(let autor of listaDeAutores) {
-                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${autor.data_nascimento}`)
+                        console.log(`${autor.id} | ${autor.nome} | ${autor.nacionalidade} | ${formatarDataPtBR(autor.data_nascimento)}`)
                     }
                     console.log("-------------------------------------------------------------------------")
                 }
