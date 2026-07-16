@@ -9,7 +9,6 @@ import {
     limparTexto,
     limparData,
     capitalizarNome,
-    apenasNumeros,
     limparId
 } from "../utils/sanitizers"
 import { traduzirErro } from "../utils/errorMessages"
