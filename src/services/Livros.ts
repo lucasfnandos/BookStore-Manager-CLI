@@ -9,7 +9,7 @@ import {
     repositoryBuscarLivroPorTitulo
 } from "../repositories/Livros";
 
-export async function serviceCriarLivro(autor_id:number, titulo:string, editora:string, publicado_em:Date, edicao:number, isbn:string, formato?:string, sub_titulo?:string, genero?:string): Promise<Livros> {
+export async function serviceCriarLivro(autor_id:number, titulo:string, editora:string, publicado_em:number, edicao:number, isbn:string, formato?:string, sub_titulo?:string, genero?:string): Promise<Livros> {
     const livroExiste = await repositoryExisteLivro(isbn);
     if (livroExiste) {
         throw new Error("ENTIDADE_JA_EXISTE");
@@ -27,7 +27,7 @@ export async function serviceCriarLivro(autor_id:number, titulo:string, editora:
     return { id, autor_id, titulo, sub_titulo:subTitulo, editora, publicado_em, edicao, formato:novoFormato, isbn, genero:novoGenero }
 }
 
-export async function serviceAtualizarLivro(id:number, autor_id?:number, titulo?:string, editora?:string, publicado_em?:Date, edicao?:number, isbn?:string, formato?:string, sub_titulo?:string, genero?:string): Promise<Livros> {
+export async function serviceAtualizarLivro(id:number, autor_id?:number, titulo?:string, editora?:string, publicado_em?:number, edicao?:number, isbn?:string, formato?:string, sub_titulo?:string, genero?:string): Promise<Livros> {
     const livroExistente = await repositoryBuscarLivroPorId(id);
     if (!livroExistente) {
         throw new Error("ID_NAO_ENCONTRADO");
