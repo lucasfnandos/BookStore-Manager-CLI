@@ -35,10 +35,10 @@ export async function serviceAtualizarLivro(id:number, autor_id?:number, titulo?
     
     const autorIdFinal = autor_id || livroExistente.autor_id
     const tituloFinal = titulo || livroExistente.titulo
-    const subTituloFinal = sub_titulo || livroExistente.sub_titulo
+    const subTituloFinal = sub_titulo !== undefined ? sub_titulo : livroExistente.sub_titulo
     const editoraFinal = editora || livroExistente.editora
     const publicacaoFinal = publicado_em || livroExistente.publicado_em
-    const edicaoFinal = edicao || livroExistente.edicao
+    const edicaoFinal = edicao ?? livroExistente.edicao
     const formatoFinal = formato || livroExistente.formato
     const isbnFinal = isbn || livroExistente.isbn
     const generoFinal = genero || livroExistente.genero
