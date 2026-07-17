@@ -36,7 +36,7 @@ export async function repositoryBuscarLivroPorAutorId(autor_id:number):Promise<L
     }
 }
 
-export async function repositoryAtualizarLivro(id:number, autor_id:number, titulo:string, sub_titulo:string, editora:string, publicado_em:Date, edicao:number, formato:string, isbn:string, genero:string): Promise<number | null> {
+export async function repositoryAtualizarLivro(id:number, autor_id:number, titulo:string, sub_titulo:string|null, editora:string, publicado_em:Date, edicao:number, formato:string, isbn:string, genero:string): Promise<number | null> {
     const sql = `UPDATE tb_livros SET autor_id=$1, titulo=$2, sub_titulo=$3, editora=$4, publicado_em=$5, edicao=$6, formato=$7, isbn=$8, genero=$9 WHERE id=$10 RETURNING id`
     try {
         const result = await pool.query<Livros>(sql, [autor_id, titulo, sub_titulo, editora, publicado_em, edicao, formato, isbn, genero, id])
@@ -63,6 +63,16 @@ export async function repositoryExisteLivro(isbn:string):Promise<boolean> {
     try {
         const result = await pool.query<Livros>(sql, [isbn])
         return (result.rowCount ?? 0) > 0
+    } catch(err) {
+        throw err
+    }
+}
+
+export async function repositoryBuscarLivroPorTitulo(titulo:string): Promise<Livros[]> {
+    const sql = `SELECT * FROM tb_livros WHERE titulo ILIKE $1`
+    try {
+        const result = await pool.query<Livros>(`%${titulo}%`)
+        return result.rows
     } catch(err) {
         throw err
     }
