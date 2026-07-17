@@ -4,7 +4,7 @@ export interface Livros{
 	titulo: string;
 	sub_titulo: string | null;
 	editora: string;
-	publicado_em: Date;
+	publicado_em: number;
 	edicao: number;
 	formato: string;
 	isbn: string;
