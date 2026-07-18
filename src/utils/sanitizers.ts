@@ -61,7 +61,3 @@ export function limparId(idInput?: string): number {
     }
     return numero
 }
-export function ehEmailValido(email: string): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return regex.test(email)
-}
