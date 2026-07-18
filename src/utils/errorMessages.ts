@@ -7,11 +7,24 @@ export function traduzirErro(erro: any, entidade: EntidadeDoSistema): string {
             return `Já existe um(a) ${entidade} com estes dados cadastrado(a) no sistema.`;
             
         case "ID_NAO_ENCONTRADO":
-            return `${entidade} não encontrado(a) no sistema. Verifique o ID e tente novamente.`;
+            return `${entidade} não encontrado(a) no sistema.`;
+
+        case "EXEMPLAR_INDISPONIVEL":
+            return `Este exemplar não está disponível para empréstimo no momento.`;
+
+        case "EXEMPLAR_EM_USO":
+            return `Não é possível excluir este exemplar pois ele está atualmente emprestado.`;
+
+        case "CLIENTE_COM_LIMITE_ATINGIDO":
+            return `Este cliente já atingiu o limite máximo de 2 empréstimos ativos.`;
+
+        case "CLIENTE_JA_POSSUI_LIVRO":
+            return `Este cliente já possui um exemplar desta mesma obra emprestado.`;
             
         case "DB_RETORNO_NULO":
         case "FALHA_AO_DELETAR":
-            return `Ocorreu uma falha ao tentar efetivar a operação para este(a) ${entidade} no banco de dados.`;
+        case "FALHA_AO_ATUALIZAR":
+            return `Ocorreu uma falha ao tentar atualizar o registro de ${entidade} no banco de dados.`;
     }
 
     if (erro.code === '23505') {

@@ -9,7 +9,7 @@ import * as readline from 'readline/promises'
 export async function iniciarMenuExemplares(terminal: readline.Interface): Promise<void> {
     let rodando = true
     while (rodando) {
-        console.log('\n========== MENU EXEMPLARES ==========');
+        console.log('\n========== MENU EXEMPLARES ==========')
         console.log('  1. CADASTRAR EXEMPLAR')
         console.log('  2. ATUALIZAR STATUS DE EXEMPLAR')
         console.log('  3. EXCLUIR EXEMPLAR')
@@ -22,7 +22,7 @@ export async function iniciarMenuExemplares(terminal: readline.Interface): Promi
             case '1': {
                 console.log("\n--- Cadastrar Exemplar ---")
                 const titulo = await terminal.question("Digite o título do livro para associar o exemplar: ")
-                const busca = await controllerBuscarLivroPorTitulo(titulo);
+                const busca = await controllerBuscarLivroPorTitulo(titulo)
 
                 if (!busca.sucesso || busca.dados.length === 0) {
                     console.log("\n Livro não encontrado.")
@@ -35,7 +35,7 @@ export async function iniciarMenuExemplares(terminal: readline.Interface): Promi
                     const resposta = await controllerCriarExemplar(idLivro)
                     console.log(`\n ${resposta.mensagem}`)
                 }
-                break;
+                break
             }
 
             case '2': {
@@ -45,22 +45,22 @@ export async function iniciarMenuExemplares(terminal: readline.Interface): Promi
                 
                 const resposta = await controllerAtualizarStatusExemplar(id, status);
                 console.log(`\n ${resposta.mensagem}`)
-                break;
+                break
             }
 
             case '3': {
                 const id = await terminal.question("Digite o ID do exemplar a ser excluído: ")
                 const resposta = await controllerDeletarExemplar(id);
                 console.log(`\n ${resposta.mensagem}`)
-                break;
+                break
             }
 
             case '0':
-                rodando = false;
-                break;
+                rodando = false
+                break
 
             default:
-                console.log("\n Opção inválida!");
+                console.log("\n Opção inválida!")
         }
     }
 }
