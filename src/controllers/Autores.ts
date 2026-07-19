@@ -15,7 +15,6 @@ import { traduzirErro } from "../utils/errorMessages"
 
 export async function controllerCriarAutor(nome:string, nacionalidade:string, data_nascimento:string):Promise<ControllerResponse> {
     try {
-        //SANITIZAR OS DADOS PRIMEIRA LETRA DA PALAVRA MAIUSCULA DEMAIS MINUSCULA SEM ESPAÇOS EM BRANCO NO FINAL E INICIO .TRIM()
         const nomeLimp = limparTexto(nome)
         const nacionalidadeLimp = limparTexto(nacionalidade)
         const data_nascimentoLimp = limparData(data_nascimento)
@@ -70,7 +69,7 @@ export async function controllerAtualizarAutor(id:string, nome?:string, nacional
         const autorEditado = await serviceAtualizarAutor(idValido, nomeFinal, nacionalidadeFinal, data_nascimentoFinal)
         return { sucesso: true, mensagem: "Autor atualizado com sucesso!", dados: autorEditado }
 
-    } catch(err) {
+    } catch(err: any) {
         return { sucesso: false, mensagem: traduzirErro(err, 'Autor')}
     }
 }
@@ -82,7 +81,7 @@ export async function controllerBuscarAutorPorNome(nome:string): Promise<Control
         const buscarAutor = await serviceBuscarAutorPorNome(nomeLimp)
         if(buscarAutor.length === 0) return { sucesso: false, mensagem: "Nenhum Autor foi encontrado com esse nome." }
         return { sucesso: true, mensagem: "Autores encontrados com esse nome...", dados: buscarAutor }
-    } catch(err) {
+    } catch(err: any) {
         return { sucesso: false, mensagem: traduzirErro(err, 'Autor')}
     }
 }
@@ -95,7 +94,7 @@ export async function controllerDeletarAutor(id:string): Promise<ControllerRespo
         if(!deletarAutor) return { sucesso: false, mensagem: "Erro: não foi possível deletar o Autor." }
         return { sucesso: true, mensagem: "Sucesso: as informações do autor foram removidas." }
 
-    } catch(err) {
+    } catch(err: any) {
         return { sucesso: false, mensagem: traduzirErro(err, 'Autor')}
     }
 }
