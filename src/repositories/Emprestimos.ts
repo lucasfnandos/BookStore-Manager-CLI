@@ -109,8 +109,3 @@ export async function repositoryBuscarLivrosPorTituloComDisponibilidade(titulo: 
         throw err
     }
 }
-
-
-
-
-//Agora vamos avançar para a implementação do services para Empréstimos seguindo a arquitetura e utilizandos as funções do repository para realizar um empréstimo, devolução, consulta se 
