@@ -11,10 +11,10 @@ import {
     capitalizarNome,
     limparId,
     apenasNumeros,
-    limparEmail,
-    ehEmailValido
+    limparEmail
 } from "../utils/sanitizers"
 import { traduzirErro } from "../utils/errorMessages"
+import { ehEmailValido } from "../utils/validators"
 
 export async function controllerCriarCliente(nome:string, cpf:string, email:string, contato:string, data_nascimento:string):Promise<ControllerResponse> {
     try {
