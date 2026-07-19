@@ -75,3 +75,42 @@ export async function repositoryContarEmprestimosAtivos(cliente_id: number): Pro
     }
     return parseInt(res.rows[0].count)
 }
+
+export async function repositoryBuscarLivrosPorAutorComDisponibilidade(autor_id: number): Promise<any[]> {
+    const sql = `
+        SELECT 
+            l.id, l.titulo, l.sub_titulo, l.edicao, l.formato, l.publicado_em,
+            COUNT(e.id) FILTER (WHERE e.status = 'Disponivel') AS qtd_disponivel
+        FROM tb_livros l
+        LEFT JOIN tb_exemplares e ON l.id = e.livro_id
+        WHERE l.autor_id = $1
+        GROUP BY l.id`
+    try {
+        const result = await pool.query(sql, [autor_id])
+        return result.rows;
+    } catch (err) {
+        throw err
+    }
+}
+
+export async function repositoryBuscarLivrosPorTituloComDisponibilidade(titulo: string): Promise<any[]> {
+    const sql = `
+        SELECT 
+            l.id, l.titulo, l.sub_titulo, l.edicao, l.formato, l.publicado_em,
+            COUNT(e.id) FILTER (WHERE e.status = 'Disponivel') AS qtd_disponivel
+        FROM tb_livros l
+        LEFT JOIN tb_exemplares e ON l.id = e.livro_id
+        WHERE l.titulo ILIKE $1
+        GROUP BY l.id`
+    try {
+        const result = await pool.query(sql, [`%${titulo}%`]);
+        return result.rows
+    } catch (err) {
+        throw err
+    }
+}
+
+
+
+
+//Agora vamos avançar para a implementação do services para Empréstimos seguindo a arquitetura e utilizandos as funções do repository para realizar um empréstimo, devolução, consulta se 
