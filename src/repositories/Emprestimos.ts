@@ -1,5 +1,5 @@
 import { pool } from '../database/db'
-import { Emprestimos, EmprestimoDetalhado } from '../models/Emprestimos'
+import { EmprestimoDetalhado } from '../models/Emprestimos'
 
 export async function repositoryCriarEmprestimo(cliente_id: number, exemplar_id: number): Promise<number | null> {
     const client = await pool.connect()
@@ -8,12 +8,13 @@ export async function repositoryCriarEmprestimo(cliente_id: number, exemplar_id:
 
         const sqlEmprestimo = `INSERT INTO tb_emprestimos (cliente_id, exemplar_id) VALUES ($1, $2) RETURNING id`
         const res = await client.query<{ id: number }>(sqlEmprestimo, [cliente_id, exemplar_id]);
-        if(!res.rows[0]) {
-            throw new Error()
+        
+        if (!res.rows[0]) {
+            throw new Error("DB_RETORNO_NULO")
         }
         const idEmprestimo = res.rows[0].id
 
-        const sqlStatus = `UPDATE tb_exemplares SET status = 'Emprestado' WHERE id = $1`;
+        const sqlStatus = `UPDATE tb_exemplares SET status = 'Emprestado' WHERE id = $1`
         await client.query(sqlStatus, [exemplar_id])
 
         await client.query('COMMIT')
@@ -27,29 +28,37 @@ export async function repositoryCriarEmprestimo(cliente_id: number, exemplar_id:
 }
 
 export async function repositoryRegistrarDevolucao(id: number, exemplar_id: number): Promise<boolean> {
-    const client = await pool.connect();
+    const client = await pool.connect()
     try {
-        await client.query('BEGIN');
-        const sqlDevolucao = `UPDATE tb_emprestimos SET devolvido_em = CURRENT_DATE WHERE id = $1`;
-        await client.query(sqlDevolucao, [id]);
+        await client.query('BEGIN')
+        
+        const sqlDevolucao = `UPDATE tb_emprestimos SET devolvido_em = CURRENT_DATE WHERE id = $1`
+        const resDevolucao = await client.query(sqlDevolucao, [id])
+        
+        if ((resDevolucao.rowCount ?? 0) === 0) {
+            throw new Error("ID_NAO_ENCONTRADO")
+        }
 
-        const sqlStatus = `UPDATE tb_exemplares SET status = 'Disponivel' WHERE id = $1`;
-        await client.query(sqlStatus, [exemplar_id]);
+        const sqlStatus = `UPDATE tb_exemplares SET status = 'Disponivel' WHERE id = $1`
+        await client.query(sqlStatus, [exemplar_id])
 
-        await client.query('COMMIT');
-        return true;
+        await client.query('COMMIT')
+        return true
     } catch (err) {
-        await client.query('ROLLBACK');
-        throw err;
+        await client.query('ROLLBACK')
+        throw err
     } finally {
-        client.release();
+        client.release()
     }
 }
 
+// MANTIDO: O seu JOIN perfeito para mostrar dados reais (nomes e títulos) no Menu
 export async function repositoryBuscarEmprestimoAtivoPorCliente(cliente_id: number): Promise<EmprestimoDetalhado[]> {
     const sql = `
         SELECT 
             emp.id, 
+            emp.exemplar_id,
+            l.id AS livro_id,
             c.nome AS cliente_nome, 
             a.nome AS autor_nome, 
             l.titulo, 
@@ -63,16 +72,18 @@ export async function repositoryBuscarEmprestimoAtivoPorCliente(cliente_id: numb
         WHERE emp.cliente_id = $1 
         AND emp.devolvido_em IS NULL`
 
-    const res = await pool.query(sql, [cliente_id])
+    const res = await pool.query<EmprestimoDetalhado>(sql, [cliente_id])
     return res.rows
 }
 
 export async function repositoryContarEmprestimosAtivos(cliente_id: number): Promise<number> {
     const sql = `SELECT COUNT(*) FROM tb_emprestimos WHERE cliente_id = $1 AND devolvido_em IS NULL`
     const res = await pool.query<{ count: string }>(sql, [cliente_id])
-    if(!res.rows[0]) {
-        throw new Error()
+    
+    if (!res.rows[0]) {
+        throw new Error("DB_RETORNO_NULO")
     }
+    
     return parseInt(res.rows[0].count)
 }
 
