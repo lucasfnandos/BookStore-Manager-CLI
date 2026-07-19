@@ -19,12 +19,12 @@ export async function controllerCriarAutor(nome:string, nacionalidade:string, da
         const nacionalidadeLimp = limparTexto(nacionalidade)
         const data_nascimentoLimp = limparData(data_nascimento)
        
-        if(!nomeLimp || !nacionalidadeLimp || !data_nascimentoLimp) return { sucesso: false, mensagem: "Dado vazio ou não informado." }
-        if(nomeLimp.length < 3) return { sucesso: false, mensagem: "Nome informado é muito curto." }
-        if(nacionalidadeLimp.length < 3) return { sucesso: false, mensagem: "Nacionalidade informada é muito curta." }
+        if(!nomeLimp || !nacionalidadeLimp || !data_nascimentoLimp) return { sucesso: false, mensagem: "Erro: Dado vazio ou não informado." }
+        if(nomeLimp.length < 3) return { sucesso: false, mensagem: "Erro : o Nome informado é muito curto." }
+        if(nacionalidadeLimp.length < 3) return { sucesso: false, mensagem: "Erro: a Nacionalidade informada é muito curta." }
         
         const dataNascimento = new Date(data_nascimentoLimp)
-        if (isNaN(dataNascimento.getTime())) return { sucesso: false, mensagem: "A data informada é inválida." }
+        if (isNaN(dataNascimento.getTime())) return { sucesso: false, mensagem: "Erro: a data informada é inválida." }
 
         const nomeCap = capitalizarNome(nomeLimp)
         const nacionalidadeCap = capitalizarNome(nacionalidadeLimp)
@@ -46,7 +46,7 @@ export async function controllerAtualizarAutor(id:string, nome?:string, nacional
         
         let nomeFinal: string | undefined = undefined
         if(nome) {
-            nomeFinal = capitalizarNome(nome); // Note que usei capitalizarNome aqui, é melhor para nomes!
+            nomeFinal = capitalizarNome(nome)
             if(!nomeFinal || nomeFinal.length < 3) return { sucesso: false, mensagem: "Erro: o nome informado é inválido." }
         }
         
