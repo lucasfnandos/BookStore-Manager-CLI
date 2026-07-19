@@ -21,6 +21,9 @@ export function traduzirErro(erro: any, entidade: EntidadeDoSistema): string {
         case "CLIENTE_JA_POSSUI_LIVRO":
             return `Este cliente já possui um exemplar desta mesma obra emprestado.`;
             
+        case "TITULO_INVALIDO":
+            return "Você precisa digitar um título para realizar a busca.";
+            
         case "DB_RETORNO_NULO":
         case "FALHA_AO_DELETAR":
         case "FALHA_AO_ATUALIZAR":
