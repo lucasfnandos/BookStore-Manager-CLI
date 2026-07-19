@@ -59,7 +59,7 @@ export async function repositoryDeletarAutor(id:number): Promise<boolean>{
 }
 
 export async function repositoryExisteAutor(nome:string, nacionalidade:string, data_nascimento:Date):Promise<boolean> {
-    const sql = `SELECT * FROM tb_autores WHERE nome=$1, nacionalidade=$2, data_nascimento=$3`
+    const sql = `SELECT * FROM tb_autores WHERE nome=$1 AND nacionalidade=$2 AND data_nascimento=$3`
     try {
         const result = await pool.query<Autores>(sql, [nome, nacionalidade, data_nascimento])
         return (result.rowCount ?? 0) > 0
