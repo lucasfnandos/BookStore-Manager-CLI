@@ -104,23 +104,30 @@ export async function iniciarMenuEmprestimos(terminal: readline.Interface): Prom
                 console.log("-------------------------------------------------------------------------")
                 const idCliente = await terminal.question("Digite o ID do Cliente: ")
                 const listaEmprCliente = await controllerListarEmprestimosPorCliente(idCliente)
-                let exempIDs = []
-                let empreIDs = []
+                let exemplaresIDs = []
+                let emprestimosIDs = []
                 if(!listaEmprCliente.sucesso) {
                     console.log(`\n ${listaEmprCliente.mensagem}`)
-                } else {
-                    console.log(`\n ${listaEmprCliente.mensagem}`)
-                    console.log("Emprestimo ID | Exemplar ID | Livro ID | Cliente | Autor | Título | Edição | ISBN")
-                    for(let emp of listaEmprCliente.dados) {
-                        console.log(`\n ${emp.id} | ${emp.exemplar_id} | ${emp.livro_id} | ${emp.cliente_nome} | ${emp.autor_nome} | ${emp.titulo} | ${emp.edicao} | ${emp.isbn}`)
-                        exempIDs.push(emp.id)
-                        empreIDs.push(emp.exemplar_id)
-                    }
+                    break
+                }
+                if(listaEmprCliente.dados.length === 0) {
+                    console.log("\n O cliente não possui empréstimos a devolver.")
+                    break
+                }
+                console.log(`\n ${listaEmprCliente.mensagem}`)
+                console.log("Emprestimo ID | Exemplar ID | Livro ID | Cliente | Autor | Título | Edição | ISBN")
+                for(let emp of listaEmprCliente.dados) {
+                    console.log(`\n ${emp.id} | ${emp.exemplar_id} | ${emp.livro_id} | ${emp.cliente_nome} | ${emp.autor_nome} | ${emp.titulo} | ${emp.edicao} | ${emp.isbn}`)
+                    emprestimosIDs.push(emp.id)
+                    exemplaresIDs.push(emp.exemplar_id)
                 }
                 console.log("-------------------------------------------------------------------------")
+
                 const idEmprestimo = await terminal.question("Digite o ID do Registro de Empréstimo: ")
                 const idExemplar = await terminal.question("Digite o ID do Exemplar devolvido: ")
-                if(!exempIDs.includes(idExemplar) || !empreIDs.includes(idEmprestimo)) {
+                const numExemplarId = Number(idExemplar)
+                const numEmprestimoId = Number(idEmprestimo)
+                if(!emprestimosIDs.includes(numEmprestimoId) || !exemplaresIDs.includes(numExemplarId)) {
                     console.log("\n")
                     console.log("\n Erro: Os IDs informados não representam um exemplar válido ou um empréstimo ativo!")
                     break
