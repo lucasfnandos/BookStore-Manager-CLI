@@ -10,6 +10,7 @@ import { controllerBuscarClientePorNome } from "../controllers/Clientes"
 import { controllerBuscarLivroPorTitulo } from '../controllers/Livros';
 import { controllerBuscarExemplaresPorLivroId } from '../controllers/Exemplares';
 import { formatarDataPtBR } from '../utils/formatters';
+import { traduzirErro } from '../utils/errorMessages';
 
 export async function iniciarMenuEmprestimos(terminal: readline.Interface): Promise<void> {
     let rodando = true
@@ -86,9 +87,44 @@ export async function iniciarMenuEmprestimos(terminal: readline.Interface): Prom
             }
             case '2': {
                 console.log("\n--- Registrar Devolução ---")
+                const buscarCliente = await terminal.question("Digite o nome do Cliente: ")
+                const listarClientes = await controllerBuscarClientePorNome(buscarCliente)
+                if(!listarClientes.sucesso) {
+                    console.log(`\n ${listarClientes.mensagem}`)
+                } else {
+                    console.log(`\n ${listarClientes.mensagem}`)
+                    console.log("-------------------------------------------------------------------------")
+                    console.log("ID | Nome | CPF | Email | Contato | Data de Nascimento")
+                    const listaDeClientes = listarClientes.dados
+                    
+                    for(let cliente of listaDeClientes) {
+                        console.log(`${cliente.id} | ${cliente.nome} | ${cliente.cpf} | ${cliente.email} | ${cliente.contato} | ${formatarDataPtBR(cliente.data_nascimento)}`)
+                    }
+                }
+                console.log("-------------------------------------------------------------------------")
+                const idCliente = await terminal.question("Digite o ID do Cliente: ")
+                const listaEmprCliente = await controllerListarEmprestimosPorCliente(idCliente)
+                let exempIDs = []
+                let empreIDs = []
+                if(!listaEmprCliente.sucesso) {
+                    console.log(`\n ${listaEmprCliente.mensagem}`)
+                } else {
+                    console.log(`\n ${listaEmprCliente.mensagem}`)
+                    console.log("Emprestimo ID | Exemplar ID | Livro ID | Cliente | Autor | Título | Edição | ISBN")
+                    for(let emp of listaEmprCliente.dados) {
+                        console.log(`\n ${emp.id} | ${emp.exemplar_id} | ${emp.livro_id} | ${emp.cliente_nome} | ${emp.autor_nome} | ${emp.titulo} | ${emp.edicao} | ${emp.isbn}`)
+                        exempIDs.push(emp.id)
+                        empreIDs.push(emp.exemplar_id)
+                    }
+                }
+                console.log("-------------------------------------------------------------------------")
                 const idEmprestimo = await terminal.question("Digite o ID do Registro de Empréstimo: ")
                 const idExemplar = await terminal.question("Digite o ID do Exemplar devolvido: ")
-
+                if(!exempIDs.includes(idExemplar) || !empreIDs.includes(idEmprestimo)) {
+                    console.log("\n")
+                    console.log("\n Erro: Os IDs informados não representam um exemplar válido ou um empréstimo ativo!")
+                    break
+                }
                 const resposta = await controllerRegistrarDevolucao(idEmprestimo, idExemplar)
                 if (resposta.sucesso) {
                     console.log(`\n ${resposta.mensagem}`)
