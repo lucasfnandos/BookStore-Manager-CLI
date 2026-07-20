@@ -3,7 +3,8 @@ import {
     serviceCriarExemplar, 
     serviceAtualizarStatusExemplar, 
     serviceDeletarExemplar,
-    serviceValidarDisponibilidadeParaEmprestimo
+    serviceValidarDisponibilidadeParaEmprestimo,
+    serviceBuscarExemplaresPorLivroId
 } from "../services/Exemplares"
 import { limparId } from "../utils/sanitizers"
 import { traduzirErro } from "../utils/errorMessages"
@@ -56,6 +57,18 @@ export async function controllerVerificarDisponibilidade(id: string): Promise<Co
         await serviceValidarDisponibilidadeParaEmprestimo(idExemplar);
         return { sucesso: true, mensagem: "Exemplar disponível para empréstimo." }
     } catch (err: any) {
+        return { sucesso: false, mensagem: traduzirErro(err, 'Exemplar') }
+    }
+}
+
+export async function controllerBuscarExemplaresPorLivroId(id:string): Promise<ControllerResponse> {
+    try {
+        const idLivro = limparId(id);
+        if (isNaN(idLivro)) return { sucesso: false, mensagem: "Erro: o ID do Exemplar informado é inválido." };
+        const exemplares = await serviceBuscarExemplaresPorLivroId(idLivro)
+        if(exemplares.length === 0) return { sucesso: false, mensagem: "Nenhum exemplar foi encontrado para esse livro."}
+        return { sucesso: true, mensagem: "Exemplares encontrados deste livro...", dados: exemplares}
+    } catch(err: any) {
         return { sucesso: false, mensagem: traduzirErro(err, 'Exemplar') }
     }
 }
