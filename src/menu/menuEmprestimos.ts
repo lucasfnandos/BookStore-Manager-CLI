@@ -6,6 +6,9 @@ import {
     controllerBuscarLivrosPorAutorComDisponibilidade,
     controllerBuscarLivrosPorTituloComDisponibilidade
 } from '../controllers/Emprestimos';
+import { controllerBuscarClientePorNome } from "../controllers/Clientes"
+import { controllerBuscarLivroPorTitulo } from '../controllers/Livros';
+import { controllerBuscarExemplaresPorLivroId } from '../controllers/Exemplares';
 import { formatarDataPtBR } from '../utils/formatters';
 
 export async function iniciarMenuEmprestimos(terminal: readline.Interface): Promise<void> {
@@ -24,9 +27,55 @@ export async function iniciarMenuEmprestimos(terminal: readline.Interface): Prom
         switch (opcao.trim()) {
             case '1': {
                 console.log("\n--- Realizar Empréstimo ---")
+                const buscarCliente = await terminal.question("Digite o nome do Cliente: ")
+                const listarClientes = await controllerBuscarClientePorNome(buscarCliente)
+                if(!listarClientes.sucesso) {
+                    console.log(`\n ${listarClientes.mensagem}`)
+                } else {
+                    console.log(`\n ${listarClientes.mensagem}`)
+                    console.log("-------------------------------------------------------------------------")
+                    console.log("ID | Nome | CPF | Email | Contato | Data de Nascimento")
+                    const listaDeClientes = listarClientes.dados
+                    
+                    for(let cliente of listaDeClientes) {
+                        console.log(`${cliente.id} | ${cliente.nome} | ${cliente.cpf} | ${cliente.email} | ${cliente.contato} | ${formatarDataPtBR(cliente.data_nascimento)}`)
+                    }
+                }
+                console.log("-------------------------------------------------------------------------")
                 const idCliente = await terminal.question("Digite o ID do Cliente: ")
-                const idExemplar = await terminal.question("Digite o ID do Exemplar que será emprestado: ")
+                console.log("-------------------------------------------------------------------------")
 
+                const buscarLivro = await terminal.question("Digite o titulo do Livro para buscar seu ID: ")
+                const listarLivros = await controllerBuscarLivroPorTitulo(buscarLivro)
+                if(!listarLivros.sucesso) {
+                    console.log(`\n ${listarLivros.mensagem}`)
+                } else {
+                    console.log(`\n ${listarLivros.mensagem}`)
+                    console.log("-------------------------------------------------------------------------")
+                    //CORRIGIR
+                    console.log("ID | Título | Editora | Publicação | Edição | ISBN | Gênero")
+                    const listaDeLivros= listarLivros.dados
+                    
+                    for(let l of listaDeLivros) {
+                        console.log(`${l.id} | ${l.titulo} | ${l.editora} | ${l.publicado_em} | ${l.edicao} | ${l.isbn} | ${l.genero}`)
+
+                    }
+                }
+                console.log("-------------------------------------------------------------------------")
+                const idLivro = await terminal.question("Digite o ID do livro para buscar um exemplar disponível: ")
+                console.log("-------------------------------------------------------------------------")
+                const exemplares = await controllerBuscarExemplaresPorLivroId(idLivro)
+                if(!exemplares.sucesso) {
+                    console.log(`\n ${exemplares.mensagem}`)
+                } else {
+                    console.log(`\n ${exemplares.mensagem}`)
+                    console.log("\nID Exemplar  |  Status")
+                    for(let e of exemplares.dados) {
+                        console.log(`\n${e.id}  |  ${e.status}`)
+                    }
+                }
+                console.log("-------------------------------------------------------------------------")
+                const idExemplar = await terminal.question("Digite o ID do Exemplar que será emprestado: ")
                 const resposta = await controllerCadastrarEmprestimo(idCliente, idExemplar)
                 if (resposta.sucesso) {
                     console.log(`\n ${resposta.mensagem} (ID do Registro: ${resposta.dados.id})`)
@@ -35,7 +84,6 @@ export async function iniciarMenuEmprestimos(terminal: readline.Interface): Prom
                 }
                 break
             }
-
             case '2': {
                 console.log("\n--- Registrar Devolução ---")
                 const idEmprestimo = await terminal.question("Digite o ID do Registro de Empréstimo: ")
