@@ -71,7 +71,7 @@ export async function repositoryExisteLivro(isbn:string):Promise<boolean> {
 export async function repositoryBuscarLivroPorTitulo(titulo:string): Promise<Livros[]> {
     const sql = `SELECT * FROM tb_livros WHERE titulo ILIKE $1`
     try {
-        const result = await pool.query<Livros>(`%${titulo}%`)
+        const result = await pool.query<Livros>(sql, [`%${titulo}%`])
         return result.rows
     } catch(err) {
         throw err

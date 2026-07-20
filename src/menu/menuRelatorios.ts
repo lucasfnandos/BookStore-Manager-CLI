@@ -37,9 +37,8 @@ export async function iniciarMenuRelatorios(terminal: readline.Interface): Promi
                     console.log("--------------------------------------------------------------------------------------------------")
                     console.log("Título | Subtítulo | Edição | Publicado em | Autor | Qtd. Disponível");
                     for (const item of resposta.dados) {
-                        const dataFormatada = formatarDataPtBR(item.ano);
-                        const sub = item.sub_titulo ? item.sub_titulo : "N/A";
-                        console.log(`${item.titulo} | ${sub} | ${item.edicao} | ${dataFormatada} | ${item.autor} | ${item.qtd}`);
+                        const sub = item.sub_titulo ? item.sub_titulo : "-";
+                        console.log(`${item.titulo} | ${sub} | ${item.edicao} | ${item.ano} | ${item.autor} | ${item.qtd}`);
                     }
                     console.log("--------------------------------------------------------------------------------------------------")
                 }

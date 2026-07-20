@@ -38,7 +38,8 @@ export async function controllerCriarLivro(autor_id:string, titulo:string, edito
         const edicaoNum = Number(edicaoLimp)
         const tituloCap = capitalizarNome(tituloLimp)
         const anoPublic = parseInt(publicLimp, 10)
-        const criarLivro = await serviceCriarLivro(autorId, tituloCap, editoraLimp, anoPublic, edicaoNum, isbnLimp, formatoLimp, subTitulo, generoLimp)
+        const generoCap = capitalizarNome(generoLimp)
+        const criarLivro = await serviceCriarLivro(autorId, tituloCap, editoraLimp, anoPublic, edicaoNum, isbnLimp, formatoLimp, subTitulo, generoCap)
         return { sucesso: true, mensagem: "Sucesso!", dados: criarLivro }
     } catch(err: any) {
         const mensagemAmigavel = traduzirErro(err, 'Livro')

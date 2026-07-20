@@ -30,7 +30,7 @@ export async function controllerCriarCliente(nome:string, cpf:string, email:stri
         if(!ehEmailValido(emailLimp)) return { sucesso: false, mensagem: "Erro: o email informado é inválido." }
         if(contatoLimp.length !== 11) return { sucesso: false, mensagem: "Erro: o contato informado é inválido." }
         
-        const dataNascimento = new Date(data_nascimentoLimp)
+        const dataNascimento = new Date(`${data_nascimentoLimp}T12:00:00`)
         if (isNaN(dataNascimento.getTime())) return { sucesso: false, mensagem: "Erro: a data informada é inválida." }
 
         const nomeCap = capitalizarNome(nomeLimp)
@@ -77,7 +77,7 @@ export async function controllerAtualizarCliente(id:string, nome?:string, cpf?:s
         let data_nascimentoFinal: Date | undefined = undefined
         if(data_nascimento) {
             const data_nascimentoLimp = limparData(data_nascimento)
-            const dataDate = new Date(data_nascimentoLimp)
+            const dataDate = new Date(`${data_nascimentoLimp}T12:00:00`)
             if(!dataDate || isNaN(dataDate.getTime())) {
                 return { sucesso: false, mensagem: "Erro: a data informada é inválida. Use DD/MM/AAAA." }
             }

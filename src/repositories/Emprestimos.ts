@@ -52,7 +52,6 @@ export async function repositoryRegistrarDevolucao(id: number, exemplar_id: numb
     }
 }
 
-// MANTIDO: O seu JOIN perfeito para mostrar dados reais (nomes e títulos) no Menu
 export async function repositoryBuscarEmprestimoAtivoPorCliente(cliente_id: number): Promise<EmprestimoDetalhado[]> {
     const sql = `
         SELECT 
