@@ -61,7 +61,7 @@ export async function controllerVerificarDisponibilidade(id: string): Promise<Co
     }
 }
 
-export async function controllerBuscarExemplaresPorLivroId(id:string): Promise<ControllerResponse> {
+export async function  controllerBuscarExemplaresPorLivroId(id:string): Promise<ControllerResponse> {
     try {
         const idLivro = limparId(id);
         if (isNaN(idLivro)) return { sucesso: false, mensagem: "Erro: o ID do Exemplar informado é inválido." };
