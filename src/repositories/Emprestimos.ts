@@ -36,11 +36,15 @@ export async function repositoryRegistrarDevolucao(id: number, exemplar_id: numb
         const resDevolucao = await client.query(sqlDevolucao, [id])
         
         if ((resDevolucao.rowCount ?? 0) === 0) {
-            throw new Error("ID_NAO_ENCONTRADO")
+            throw new Error("FALHA_AO_ATUALIZAR")
         }
 
         const sqlStatus = `UPDATE tb_exemplares SET status = 'Disponivel' WHERE id = $1`
-        await client.query(sqlStatus, [exemplar_id])
+        const resStatus = await client.query(sqlStatus, [exemplar_id])
+
+        if ((resStatus.rowCount ?? 0) === 0) {
+            throw new Error("FALHA_AO_ATUALIZAR")
+        }
 
         await client.query('COMMIT')
         return true
